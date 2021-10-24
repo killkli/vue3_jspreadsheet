@@ -71,7 +71,7 @@ The component would be imported as global object named "VueJSpreadsheet", just r
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <script src="https://unpkg.com/vue@next"></script>
-    <script src="https://unpkg.com/vue3_jspreadsheet" /></script>
+    <script src="https://unpkg.com/vue3_jspreadsheet" />
     <link rel="stylesheet" href="https://unpkg.com/vue3_jspreadsheet/dist/vue3_jspreadsheet.css"/>
   </head>
   <body>
