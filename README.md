@@ -24,3 +24,36 @@ also requires to get the global css setting (from JSpreadsheet & JSuites).
 ```html
 <link rel="stylesheet" href="https://unpkg.com/vue3_jspreadsheet/dist/vue3_jspreadsheet.css"/>
 ```
+
+## Usage
+### Node
+You'll need to import global css first from the app's entry js file, as such:
+```javascript
+import 'vue3_jspreadsheet/dist/vue3_jspreadsheet.css';
+```
+then just import the component when you need it, for example:
+```html
+<template>
+  <VueJSpreadsheet v-model="data" />
+</template>
+
+<script>
+import VueJSpreadsheet from 'vue3_jspreadsheet';
+import {ref} from 'vue';
+
+export default {
+  components: {
+    VueJSpreadsheet
+  },
+  setup() {
+    const data = ref([
+      [123,42,4124,"test"],
+      [4,525,124,"geg"],
+      [4241,"24",32]
+    ]);
+    return {data};
+  },
+}
+</script>
+```
+
