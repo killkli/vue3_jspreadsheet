@@ -1,6 +1,6 @@
 {
   "name": "vue3_jspreadsheet",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "private": false,
   "description": "A simple Vue3 wrapper for JSpreadsheet module, which is awesome in itself.",
   "main": "dist/vue3_jspreadsheet.ssr.js",
@@ -13,7 +13,6 @@
     "dist/assets/*",
     "src/**/*.vue"
   ],
-  "sideEffects": false,
   "scripts": {
     "serve": "vue-cli-service serve dev/serve.js",
     "prebuild": "rimraf ./dist",
