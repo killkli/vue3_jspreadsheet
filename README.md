@@ -1,8 +1,10 @@
 # A simple Vue3 wrapper for [JSpreadsheet](https://github.com/jspreadsheet/ce)
 
+## *** Update for 0.2.5 ***
+Fixed a major problematic setting in package.json, which would cause webpack not to compile imported css from node_modules. For Node & webpack users, please must update to version ^0.2.5!
+
 ## Requirement
 Obviously, you need to have your Vue3 properly configured.
-
 
 ## Install
 

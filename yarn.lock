@@ -5175,11 +5175,6 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
-jsuites@^4.9.21:
-  version "4.9.21"
-  resolved "https://registry.yarnpkg.com/jsuites/-/jsuites-4.9.21.tgz#864eecad9ea4bb56a8867fb8dec697543f27bb23"
-  integrity sha512-NqAsskMLM9Ye+pefqiTWN7nuiRBpy8hgxZLG0G71spSnZijo5OfdPvHkoGddpHdUqAmeql3vBSpefMU8GhdmnQ==
-
 killable@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/killable/-/killable-1.0.1.tgz#4c8ce441187a061c7474fb87ca08e2a638194892"
