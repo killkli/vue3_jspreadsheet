@@ -2,7 +2,7 @@
   <div ref="sheetEl" />
 </template>
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import jspreadsheet from "./local/jspreadsheet";
 import "./local/jexcel.css";
 
@@ -21,6 +21,19 @@ export default {
   setup(props, { emit }) {
     const options = props.options ? { ...props.options } : {};
     const data = props.modelValue ? props.modelValue : [];
+    watch(() => props.modelValue, (newValue, oldValue) => {
+      if (newValue !== oldValue) {
+        const column_max = newValue.reduce((cur,sum)=>{
+          return Math.max(cur,sum.length);
+        },0);
+        const origina_column_max = oldValue[0].length;
+        const column_diff = column_max - origina_column_max;
+        if (column_diff > 0) {
+          sheetEl.value.jexcel.insertColumn(column_diff);
+        }
+        sheetEl.value.jexcel.setData(newValue, true);
+      }
+    });
     options.data = data;
     let sheet_columns = [];
     for (let i = 0; i < data.length; i++) {
