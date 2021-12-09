@@ -22,18 +22,22 @@ export default {
     const options = props.options ? { ...props.options } : {};
     const data = props.modelValue ? props.modelValue : [];
     watch(() => props.modelValue, (newValue, oldValue) => {
-      if (newValue !== oldValue) {
-        const column_max = newValue.reduce((cur,sum)=>{
-          return Math.max(cur,sum.length);
-        },0);
-        const origina_column_max = oldValue[0].length;
-        const column_diff = column_max - origina_column_max;
-        if (column_diff > 0) {
-          sheetEl.value.jexcel.insertColumn(column_diff);
-        }
-        sheetEl.value.jexcel.setData(newValue, true);
+      if (localLock) {
+        localLock = false;
+        return;
       }
-    });
+      const column_max = newValue.reduce((cur, sum) => {
+        return Math.max(cur, sum.length);
+      }, 0);
+      const origina_column_max = oldValue[0].length;
+      const column_diff = column_max - origina_column_max;
+      if (column_diff > 0) {
+        sheetEl.value.jexcel.insertColumn(column_diff);
+      }
+      sheetEl.value.jexcel.setData(newValue, true);
+    }
+    );
+
     options.data = data;
     let sheet_columns = [];
     for (let i = 0; i < data.length; i++) {
@@ -87,13 +91,16 @@ export default {
       }
     };
 
+
     // 需將bind value 透過 onchange 傳遞給Vue component
+    let localLock = false;
     options.onchange = function (el, cell, x, y, value) {
       const instance = el.jexcel;
       if (typeof props.options?.onchange === "function") {
         props.options.onchange(instance, cell, x, y, value);
       }
       const data = instance.getData();
+      localLock = true;
       emit("update:modelValue", data);
     };
 
