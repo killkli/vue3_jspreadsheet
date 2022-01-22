@@ -78,8 +78,6 @@ export default {
         }
         if (options.columns[i] === undefined) {
           options.columns[i] = { width: e * 20 };
-        } else {
-          options.columns[i].width = Math.max(options.columns[i].width, e * 20);
         }
       });
     }
