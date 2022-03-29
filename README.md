@@ -1,5 +1,8 @@
 # A simple Vue3 wrapper for [JSpreadsheet](https://github.com/jspreadsheet/ce)
 
+## *** Major update for 0.4.0 ***
+This is a major update. Instead of binding Vue's emit event to each event of JSpreadsheet, this commit uses jspreadsheet's global onevent to communicate changes between Vue modelValue and jspreadsheet instance, making the code less and working with more options such as jspreadsheet's sorting function.
+
 ## *** Update for 0.3 ***
 Fixed [Github Issue #2](https://github.com/killkli/vue3_jspreadsheet/issues/2#issue-1059249929)
 

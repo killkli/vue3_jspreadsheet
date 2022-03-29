@@ -22,10 +22,12 @@ export default {
     const options = props.options ? { ...props.options } : {};
     const data = props.modelValue ? props.modelValue : [];
     watch(() => props.modelValue, (newValue, oldValue) => {
+      // localLock 用來檢查資料更新是否來自於jspreadsheet的事件，是的話就不需要進行動作，並解除這次的localLock
       if (localLock) {
         localLock = false;
         return;
       }
+
       const column_max = newValue.reduce((cur, sum) => {
         return Math.max(cur, sum.length);
       }, 0);
@@ -35,8 +37,7 @@ export default {
         sheetEl.value.jexcel.insertColumn(column_diff);
       }
       sheetEl.value.jexcel.setData(newValue, true);
-    }
-    );
+    });
 
     options.data = data;
     let sheet_columns = [];
@@ -92,16 +93,24 @@ export default {
 
     // 需將bind value 透過 onchange 傳遞給Vue component
     let localLock = false;
+    options.onevent = function (el, ...args) {
+      const instance = sheetEl.value?.jexcel;
+      if(typeof instance !=="object") return;
+      let result = undefined;
+      if (typeof props.options?.onevent === "function") {
+        result = props.options.onevent(instance, ...args);
+      }
+      const data = instance.getData();
+      localLock = true;
+      emit("update:modelValue", data);
+      return result;
+    };
     options.onchange = function (el, cell, x, y, value) {
       const instance = el.jexcel;
       if (typeof props.options?.onchange === "function") {
         props.options.onchange(instance, cell, x, y, value);
       }
-      const data = instance.getData();
-      localLock = true;
-      emit("update:modelValue", data);
     };
-
     options.onafterchanges = function (el, cell, x, y, value) {
       const instance = el.jexcel;
       if (typeof props.options?.onafterchanges === "function") {
