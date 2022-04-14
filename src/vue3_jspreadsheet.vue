@@ -21,23 +21,26 @@ export default {
   setup(props, { emit }) {
     const options = props.options ? { ...props.options } : {};
     const data = props.modelValue ? props.modelValue : [];
-    watch(() => props.modelValue, (newValue, oldValue) => {
-      // localLock 用來檢查資料更新是否來自於jspreadsheet的事件，是的話就不需要進行動作，並解除這次的localLock
-      if (localLock) {
-        localLock = false;
-        return;
-      }
-
-      const column_max = newValue.reduce((cur, sum) => {
-        return Math.max(cur, sum.length);
-      }, 0);
-      const origina_column_max = oldValue[0].length;
-      const column_diff = column_max - origina_column_max;
-      if (column_diff > 0) {
-        sheetEl.value.jexcel.insertColumn(column_diff);
-      }
-      sheetEl.value.jexcel.setData(newValue, true);
-    });
+    // 2022/4/14 update, updating value when data array size changed (both column and row)
+    watch(() => [props.modelValue, props.modelValue.length, props.modelValue.reduce((max, cur) => {
+      if (cur.length > max) return cur.length;
+    }
+      , 0)], (newValue, oldValue) => {
+        // localLock 用來檢查資料更新是否來自於jspreadsheet的事件，是的話就不需要進行動作，並解除這次的localLock
+        if (localLock) {
+          localLock = false;
+          return;
+        }
+        const column_max = newValue[0].reduce((cur, sum) => {
+          return Math.max(cur, sum.length);
+        }, 0);
+        const origina_column_max = oldValue[0][0].length;
+        const column_diff = column_max - origina_column_max;
+        if (column_diff > 0) {
+          sheetEl.value.jexcel.insertColumn(column_diff);
+        }
+        sheetEl.value.jexcel.setData(newValue[0], true);
+      });
 
     options.data = data;
     let sheet_columns = [];
@@ -95,7 +98,7 @@ export default {
     let localLock = false;
     options.onevent = function (el, ...args) {
       const instance = sheetEl.value?.jexcel;
-      if(typeof instance !=="object") return;
+      if (typeof instance !== "object") return;
       let result = undefined;
       if (typeof props.options?.onevent === "function") {
         result = props.options.onevent(instance, ...args);

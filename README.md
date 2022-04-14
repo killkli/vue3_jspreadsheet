@@ -1,5 +1,8 @@
 # A simple Vue3 wrapper for [JSpreadsheet](https://github.com/jspreadsheet/ce)
 
+## *** update for 0.4.2 ***
+Updated when modelData changes array size (ex. push or pop array item), in both dimensions, the component doestn't update jspreadsheet instance data, now it will act accordingly. No need to manual refresh the component.
+
 ## *** Major update for 0.4.0 ***
 This is a major update. Instead of binding Vue's emit event to each event of JSpreadsheet, this commit uses jspreadsheet's global onevent to communicate changes between Vue modelValue and jspreadsheet instance, making the code less and working with more options such as jspreadsheet's sorting function.
 
