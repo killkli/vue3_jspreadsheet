@@ -1,6 +1,6 @@
 {
   "name": "vue3_jspreadsheet",
-  "version": "0.4.1",
+  "version": "0.4.3",
   "private": false,
   "description": "A simple Vue3 wrapper for JSpreadsheet module, which is awesome in itself.",
   "keywords": ["spreadsheet", "vue3", "jspreadsheet","component"],
