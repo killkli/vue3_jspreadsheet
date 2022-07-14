@@ -674,8 +674,8 @@ const jSuites = require('jsuites');
             obj.pagination.classList.add('jexcel_pagination');
             var paginationInfo = document.createElement('div');
             var paginationPages = document.createElement('div');
-            obj.pagination.appendChild(paginationInfo);
             obj.pagination.appendChild(paginationPages);
+            obj.pagination.appendChild(paginationInfo);
 
             // Hide pagination if not in use
             if (!obj.options.pagination) {
@@ -692,9 +692,9 @@ const jSuites = require('jsuites');
             obj.content.appendChild(obj.corner);
             obj.content.appendChild(obj.textarea);
 
+            el.appendChild(obj.pagination);
             el.appendChild(obj.toolbar);
             el.appendChild(obj.content);
-            el.appendChild(obj.pagination);
             el.appendChild(obj.contextMenu);
             el.appendChild(obj.ads);
             el.classList.add('jexcel_container');
@@ -5807,8 +5807,8 @@ const jSuites = require('jsuites');
          */
         obj.updatePagination = function () {
             // Reset container
-            obj.pagination.children[0].innerHTML = '';
             obj.pagination.children[1].innerHTML = '';
+            obj.pagination.children[0].innerHTML = '';
 
             // Start pagination
             if (obj.options.pagination) {
@@ -5821,7 +5821,7 @@ const jSuites = require('jsuites');
 
                 if (!results) {
                     // No records found
-                    obj.pagination.children[0].innerHTML = obj.options.text.noRecordsFound;
+                    obj.pagination.children[1].innerHTML = obj.options.text.noRecordsFound;
                 } else {
                     // Pagination container
                     var quantyOfPages = Math.ceil(results / obj.options.pagination);
@@ -5846,7 +5846,7 @@ const jSuites = require('jsuites');
                         paginationItem.className = 'jexcel_page';
                         paginationItem.innerHTML = '<';
                         paginationItem.title = 1;
-                        obj.pagination.children[1].appendChild(paginationItem);
+                        obj.pagination.children[0].appendChild(paginationItem);
                     }
 
                     // Get page links
@@ -5854,7 +5854,7 @@ const jSuites = require('jsuites');
                         var paginationItem = document.createElement('div');
                         paginationItem.className = 'jexcel_page';
                         paginationItem.innerHTML = i;
-                        obj.pagination.children[1].appendChild(paginationItem);
+                        obj.pagination.children[0].appendChild(paginationItem);
 
                         if (obj.pageNumber == (i - 1)) {
                             paginationItem.classList.add('jexcel_page_selected');
@@ -5867,7 +5867,7 @@ const jSuites = require('jsuites');
                         paginationItem.className = 'jexcel_page';
                         paginationItem.innerHTML = '>';
                         paginationItem.title = quantyOfPages;
-                        obj.pagination.children[1].appendChild(paginationItem);
+                        obj.pagination.children[0].appendChild(paginationItem);
                     }
 
                     // Text
@@ -5881,7 +5881,7 @@ const jSuites = require('jsuites');
                         });
                     };
 
-                    obj.pagination.children[0].innerHTML = format(obj.options.text.showingPage, obj.pageNumber + 1, quantyOfPages)
+                    obj.pagination.children[1].innerHTML = format(obj.options.text.showingPage, obj.pageNumber + 1, quantyOfPages)
                 }
             }
         }
