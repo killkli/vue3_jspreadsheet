@@ -8,26 +8,26 @@ export default defineComponent({
     VueJSpreadsheet
   },
   setup() {
-    const tableData = ref([['A1', 'B1', 'C1'],
-        [1,2,3],
-        [4,5,6],['A1', 'B1', 'C1'],
-        [1,2,3],
-        [4,5,6],['A1', 'B1', 'C1'],
-        [1,2,3],
-        [4,5,6]]);
+    const tableData = ref([
+      ['a', 'b'],
+      ['d', 'e'],
+      ['g', 'h']
+    ]);
     const setting = ref({
-      filters: true,
+      filters: false,
+      search: true,
+      pagination: 15,
+      paginationOptions: [15, 20, 30, 40]
     })
-    const testFunc = ()=>{
+    const testFunc = () => {
       tableData.value = [
         ['A1', 'B1', 'C1'],
-        [1,2,3],
-        [4,5,6]
-        ];
+        [1, 2, 3],
+        [4, 5, 6]
+      ];
     }
-    console.log(tableData);
     return {
-      tableData,testFunc,setting
+      tableData, testFunc, setting
     }
   }
 });
@@ -35,7 +35,7 @@ export default defineComponent({
 
 <template>
   <div id="app">
-    <VueJSpreadsheet v-model="tableData" :options="setting"/>
+    <VueJSpreadsheet v-model="tableData" :options="setting" />
     <button @click="testFunc">test</button>
   </div>
 </template>

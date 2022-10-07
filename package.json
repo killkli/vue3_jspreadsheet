@@ -1,9 +1,14 @@
 {
   "name": "vue3_jspreadsheet",
-  "version": "0.4.3",
+  "version": "0.4.5",
   "private": false,
   "description": "A simple Vue3 wrapper for JSpreadsheet module, which is awesome in itself.",
-  "keywords": ["spreadsheet", "vue3", "jspreadsheet","component"],
+  "keywords": [
+    "spreadsheet",
+    "vue3",
+    "jspreadsheet",
+    "component"
+  ],
   "main": "dist/vue3_jspreadsheet.ssr.js",
   "browser": "dist/vue3_jspreadsheet.esm.js",
   "module": "dist/vue3_jspreadsheet.esm.js",
@@ -23,6 +28,7 @@
     "build:unpkg": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format iife"
   },
   "dependencies": {
+    "core-js": "^3.24.0",
     "jsuites": "^4.9.22"
   },
   "devDependencies": {
@@ -48,8 +54,8 @@
     "vue": "^3.0.5"
   },
   "peerDependencies": {
-    "vue": "^3.0.5",
-    "jsuites": "^4.9.22"
+    "jsuites": "^4.9.22",
+    "vue": "^3.0.5"
   },
   "engines": {
     "node": ">=12"
