@@ -13,7 +13,6 @@ specifiers:
   '@vue/compiler-sfc': ^3.0.11
   core-js: ^3.24.0
   cross-env: ^7.0.3
-  jsuites: ^4.9.22
   minimist: ^1.2.5
   postcss: ^8.2.10
   rimraf: ^3.0.2
@@ -26,7 +25,6 @@ specifiers:
 
 dependencies:
   core-js: 3.24.0
-  jsuites: 4.14.2
 
 devDependencies:
   '@babel/core': 7.18.9
@@ -36,7 +34,7 @@ devDependencies:
   '@rollup/plugin-commonjs': 14.0.0_rollup@2.77.2
   '@rollup/plugin-node-resolve': 9.0.0_rollup@2.77.2
   '@rollup/plugin-replace': 2.4.2_rollup@2.77.2
-  '@vue/cli-plugin-babel': 4.5.19_jaacpt4wek7mppalqtj24osnny
+  '@vue/cli-plugin-babel': 4.5.19_t3q5rnkqwzptgolro2veevewfq
   '@vue/cli-service': 4.5.19_2yymnzrok6eda47acnj2yjm3ae
   '@vue/compiler-sfc': 3.2.37
   cross-env: 7.0.3
@@ -1674,9 +1672,11 @@ packages:
       svg-tags: 1.0.0
     dev: true
 
-  /@vue/babel-preset-app/4.5.19_vue@3.2.37:
+  /@vue/babel-preset-app/4.5.19_kgxevgcco3rqy76usy4f65ppk4:
     resolution: {integrity: sha512-VCNRiAt2P/bLo09rYt3DLe6xXUMlhJwrvU18Ddd/lYJgC7s8+wvhgYs+MTx4OiAXdu58drGwSBO9SPx7C6J82Q==}
     peerDependencies:
+      '@babel/core': '*'
+      core-js: ^3
       vue: ^2 || ^3.0.0-0
     peerDependenciesMeta:
       core-js:
@@ -1791,13 +1791,13 @@ packages:
     resolution: {integrity: sha512-GdxvNSmOw7NHIazCO8gTK+xZbaOmScTtxj6eHVeMbYpDYVPJ+th3VMLWNpw/b6uOjwzzcyKlA5dRQ1DAb+gF/g==}
     dev: true
 
-  /@vue/cli-plugin-babel/4.5.19_jaacpt4wek7mppalqtj24osnny:
+  /@vue/cli-plugin-babel/4.5.19_t3q5rnkqwzptgolro2veevewfq:
     resolution: {integrity: sha512-8ebXzaMW9KNTMAN6+DzkhFsjty1ieqT7hIW5Lbk4v30Qhfjkms7lBWyXPGkoq+wAikXFa1Gnam2xmWOBqDDvWg==}
     peerDependencies:
       '@vue/cli-service': ^3.0.0 || ^4.0.0-0
     dependencies:
       '@babel/core': 7.18.9
-      '@vue/babel-preset-app': 4.5.19_vue@3.2.37
+      '@vue/babel-preset-app': 4.5.19_kgxevgcco3rqy76usy4f65ppk4
       '@vue/cli-service': 4.5.19_2yymnzrok6eda47acnj2yjm3ae
       '@vue/cli-shared-utils': 4.5.19
       babel-loader: 8.2.5_7uc2ny5pnz7ums2wq2q562bf6y
@@ -1805,6 +1805,7 @@ packages:
       thread-loader: 2.1.3_webpack@4.46.0
       webpack: 4.46.0
     transitivePeerDependencies:
+      - core-js
       - supports-color
       - vue
       - webpack-cli
@@ -6047,10 +6048,6 @@ packages:
       json-schema: 0.4.0
       verror: 1.10.0
     dev: true
-
-  /jsuites/4.14.2:
-    resolution: {integrity: sha512-zgI4zf+lfsS7BUP05QfAlZO+maEeASN4RSCrR/pS/mi4+xBdWxyPsrzAB/DhCSreyAF7nA8EbGlCuXTHzxXBww==}
-    dev: false
 
   /killable/1.0.1:
     resolution: {integrity: sha512-LzqtLKlUwirEUyl/nicirVmNiPvYs7l5n8wOPP7fyJVpUPkvCnW/vuiXGpylGUlnPDnB7311rARzAt3Mhswpjg==}

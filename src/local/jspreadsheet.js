@@ -7,14 +7,10 @@
  * This software is distribute under MIT License
  */
 
-const jSuites = require('jsuites');
 
-(function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-        typeof define === 'function' && define.amd ? define(factory) :
-            global.jspreadsheet = global.jexcel = factory();
-}(this, (function () {
+import jSuites from './jsuites/jsuites';
 
+const jspreadsheet = function () {
     'use strict';
 
     // Basic version information
@@ -59,10 +55,6 @@ const jSuites = require('jsuites');
 
         // Loading default configuration
         var defaults = {
-            // External data
-            url: null,
-            // Ajax options
-            method: 'GET',
             requestVariables: null,
             // Data
             data: null,
@@ -127,8 +119,6 @@ const jSuites = require('jsuites');
             wordWrap: false,
             // Image options
             imageOptions: null,
-            // CSV source
-            csv: null,
             // Filename
             csvFileName: 'jspreadsheet',
             // Consider first line as header
@@ -165,6 +155,7 @@ const jSuites = require('jsuites');
             style: null,
             classes: null,
             // Execute formulas
+            parseFormulas: true,
             autoIncrement: true,
             autoCasting: true,
             // Security
@@ -213,8 +204,6 @@ const jSuites = require('jsuites');
             onsave: null,
             // Global event dispatcher
             onevent: null,
-            // Persistance
-            persistance: false,
             // Customize any cell behavior
             updateTable: null,
             // Detach the HTML table when calling updateTable
@@ -366,12 +355,6 @@ const jSuites = require('jsuites');
                 }
             }
 
-            // Persistance
-            if (event == 'onafterchanges' && obj.options.persistance) {
-                var url = obj.options.persistance == true ? obj.options.url : obj.options.persistance;
-                var data = obj.prepareJson(arguments[2]);
-                obj.save(url, data);
-            }
 
             return ret;
         }
@@ -469,18 +452,11 @@ const jSuites = require('jsuites');
                 } else if (obj.options.columns[i].type == 'calendar') {
                     // Default format for date columns
                     if (!obj.options.columns[i].options.format) {
-                        obj.options.columns[i].options.format = 'YYYY/MM/DD';
+                        obj.options.columns[i].options.format = 'DD/MM/YYYY';
                     }
                 }
             }
-            // Create the table when is ready
-            if (!multiple.length) {
-                obj.createTable();
-            } else {
-                jSuites.ajax(multiple, function () {
-                    obj.createTable();
-                });
-            }
+            obj.createTable();
         }
 
         obj.createTable = function () {
@@ -674,8 +650,8 @@ const jSuites = require('jsuites');
             obj.pagination.classList.add('jexcel_pagination');
             var paginationInfo = document.createElement('div');
             var paginationPages = document.createElement('div');
-            obj.pagination.appendChild(paginationPages);
             obj.pagination.appendChild(paginationInfo);
+            obj.pagination.appendChild(paginationPages);
 
             // Hide pagination if not in use
             if (!obj.options.pagination) {
@@ -692,9 +668,9 @@ const jSuites = require('jsuites');
             obj.content.appendChild(obj.corner);
             obj.content.appendChild(obj.textarea);
 
-            el.appendChild(obj.pagination);
             el.appendChild(obj.toolbar);
             el.appendChild(obj.content);
+            el.appendChild(obj.pagination);
             el.appendChild(obj.contextMenu);
             el.appendChild(obj.ads);
             el.classList.add('jexcel_container');
@@ -765,31 +741,7 @@ const jSuites = require('jsuites');
          * @return void
          */
         obj.refresh = function () {
-            if (obj.options.url) {
-                // Loading
-                if (obj.options.loadingSpin == true) {
-                    jSuites.loading.show();
-                }
-
-                jSuites.ajax({
-                    url: obj.options.url,
-                    method: obj.options.method,
-                    data: obj.options.requestVariables,
-                    dataType: 'json',
-                    success: function (result) {
-                        // Data
-                        obj.options.data = (result.data) ? result.data : result;
-                        // Prepare table
-                        obj.setData();
-                        // Hide spin
-                        if (obj.options.loadingSpin == true) {
-                            jSuites.loading.hide();
-                        }
-                    }
-                });
-            } else {
-                obj.setData();
-            }
+            obj.setData();
         }
 
         /**
@@ -798,7 +750,7 @@ const jSuites = require('jsuites');
          * @param array data In case no data is sent, default is reloaded
          * @return void
          */
-        obj.setData = function (data, skipEvent = false) {
+        obj.setData = function (data) {
             // Update data
             if (data) {
                 if (typeof (data) == 'string') {
@@ -919,7 +871,7 @@ const jSuites = require('jsuites');
             obj.updateTable();
 
             // Onload
-            if (!skipEvent) obj.dispatch('onload', el, obj);
+            obj.dispatch('onload', el, obj);
         }
 
         /**
@@ -1048,33 +1000,6 @@ const jSuites = require('jsuites');
             // Filter rows
             return rows.filter(function (el) {
                 return el != null;
-            });
-        }
-
-        /**
-         * Post json to a remote server
-         */
-        obj.save = function (url, data) {
-            // Parse anything in the data before sending to the server
-            var ret = obj.dispatch('onbeforesave', el, obj, data);
-            if (ret) {
-                var data = ret;
-            } else {
-                if (ret === false) {
-                    return false;
-                }
-            }
-
-            // Remove update
-            jSuites.ajax({
-                url: url,
-                method: 'POST',
-                dataType: 'json',
-                data: { data: JSON.stringify(data) },
-                success: function (result) {
-                    // Event
-                    obj.dispatch('onsave', el, obj, data);
-                }
             });
         }
 
@@ -2312,9 +2237,9 @@ const jSuites = require('jsuites');
          * @param string value
          * @return void
          */
-        obj.setValueFromCoords = function (x, y, value, force) {
+        obj.setValueFromCoords = function (x, y, value, force, skipEvent = false) {
             var records = [];
-            records.push(obj.updateCell(x, y, value, force));
+            records.push(obj.updateCell(x, y, value, force, skipEvent));
 
             // Update all formulas in the chain
             obj.updateFormulaChain(x, y, records);
@@ -2378,7 +2303,7 @@ const jSuites = require('jsuites');
          * @param object cell
          * @return void
          */
-        obj.updateCell = function (x, y, value, force) {
+        obj.updateCell = function (x, y, value, force, skipevent = false) {
             // Changing value depending on the column type
             if (obj.records[y][x].classList.contains('readonly') == true && !force) {
                 // Do nothing
@@ -2399,7 +2324,7 @@ const jSuites = require('jsuites');
                 }
 
                 // On change
-                var val = obj.dispatch('onbeforechange', el, obj.records[y][x], x, y, value);
+                var val = skipevent ? value : obj.dispatch('onbeforechange', el, obj.records[y][x], x, y, value);
 
                 // If you return something this will overwrite the value
                 if (val != undefined) {
@@ -2501,7 +2426,7 @@ const jSuites = require('jsuites');
                 }
 
                 // On change
-                obj.dispatch('onchange', el, (obj.records[y] && obj.records[y][x] ? obj.records[y][x] : null), x, y, value, record.oldValue);
+                skipevent ? null : obj.dispatch('onchange', el, (obj.records[y] && obj.records[y][x] ? obj.records[y][x] : null), x, y, value, record.oldValue);
             }
 
             return record;
@@ -3143,7 +3068,7 @@ const jSuites = require('jsuites');
             } else {
                 // In case the column is an object
                 if (typeof (column) == 'object') {
-                    column = $(column).getAttribute('data-x');
+                    column = document.querySelector(column).getAttribute('data-x');
                 }
 
                 data = obj.colgroup[column].getAttribute('width')
@@ -3273,7 +3198,7 @@ const jSuites = require('jsuites');
             } else {
                 // In case the row is an object
                 if (typeof (row) == 'object') {
-                    row = $(row).getAttribute('data-y');
+                    row = document.querySelector(row).getAttribute('data-y');
                 }
 
                 var data = obj.rows[row].style.height;
@@ -5807,8 +5732,8 @@ const jSuites = require('jsuites');
          */
         obj.updatePagination = function () {
             // Reset container
-            obj.pagination.children[1].innerHTML = '';
             obj.pagination.children[0].innerHTML = '';
+            obj.pagination.children[1].innerHTML = '';
 
             // Start pagination
             if (obj.options.pagination) {
@@ -5821,7 +5746,7 @@ const jSuites = require('jsuites');
 
                 if (!results) {
                     // No records found
-                    obj.pagination.children[1].innerHTML = obj.options.text.noRecordsFound;
+                    obj.pagination.children[0].innerHTML = obj.options.text.noRecordsFound;
                 } else {
                     // Pagination container
                     var quantyOfPages = Math.ceil(results / obj.options.pagination);
@@ -5846,7 +5771,7 @@ const jSuites = require('jsuites');
                         paginationItem.className = 'jexcel_page';
                         paginationItem.innerHTML = '<';
                         paginationItem.title = 1;
-                        obj.pagination.children[0].appendChild(paginationItem);
+                        obj.pagination.children[1].appendChild(paginationItem);
                     }
 
                     // Get page links
@@ -5854,7 +5779,7 @@ const jSuites = require('jsuites');
                         var paginationItem = document.createElement('div');
                         paginationItem.className = 'jexcel_page';
                         paginationItem.innerHTML = i;
-                        obj.pagination.children[0].appendChild(paginationItem);
+                        obj.pagination.children[1].appendChild(paginationItem);
 
                         if (obj.pageNumber == (i - 1)) {
                             paginationItem.classList.add('jexcel_page_selected');
@@ -5867,7 +5792,7 @@ const jSuites = require('jsuites');
                         paginationItem.className = 'jexcel_page';
                         paginationItem.innerHTML = '>';
                         paginationItem.title = quantyOfPages;
-                        obj.pagination.children[0].appendChild(paginationItem);
+                        obj.pagination.children[1].appendChild(paginationItem);
                     }
 
                     // Text
@@ -5881,7 +5806,7 @@ const jSuites = require('jsuites');
                         });
                     };
 
-                    obj.pagination.children[1].innerHTML = format(obj.options.text.showingPage, obj.pageNumber + 1, quantyOfPages)
+                    obj.pagination.children[0].innerHTML = format(obj.options.text.showingPage, obj.pageNumber + 1, quantyOfPages)
                 }
             }
         }
@@ -6644,72 +6569,8 @@ const jSuites = require('jsuites');
                 }
             });
 
-            // Load the table data based on an CSV file
-            if (obj.options.csv) {
-                // Loading
-                if (obj.options.loadingSpin == true) {
-                    jSuites.loading.show();
-                }
-
-                // Load CSV file
-                jSuites.ajax({
-                    url: obj.options.csv,
-                    method: obj.options.method,
-                    data: obj.options.requestVariables,
-                    dataType: 'text',
-                    success: function (result) {
-                        // Convert data
-                        var newData = obj.parseCSV(result, obj.options.csvDelimiter)
-
-                        // Headers
-                        if (obj.options.csvHeaders == true && newData.length > 0) {
-                            var headers = newData.shift();
-                            for (var i = 0; i < headers.length; i++) {
-                                if (!obj.options.columns[i]) {
-                                    obj.options.columns[i] = { type: 'text', align: obj.options.defaultColAlign, width: obj.options.defaultColWidth };
-                                }
-                                // Precedence over pre-configurated titles
-                                if (typeof obj.options.columns[i].title === 'undefined') {
-                                    obj.options.columns[i].title = headers[i];
-                                }
-                            }
-                        }
-                        // Data
-                        obj.options.data = newData;
-                        // Prepare table
-                        obj.prepareTable();
-                        // Hide spin
-                        if (obj.options.loadingSpin == true) {
-                            jSuites.loading.hide();
-                        }
-                    }
-                });
-            } else if (obj.options.url) {
-                // Loading
-                if (obj.options.loadingSpin == true) {
-                    jSuites.loading.show();
-                }
-
-                jSuites.ajax({
-                    url: obj.options.url,
-                    method: obj.options.method,
-                    data: obj.options.requestVariables,
-                    dataType: 'json',
-                    success: function (result) {
-                        // Data
-                        obj.options.data = (result.data) ? result.data : result;
-                        // Prepare table
-                        obj.prepareTable();
-                        // Hide spin
-                        if (obj.options.loadingSpin == true) {
-                            jSuites.loading.hide();
-                        }
-                    }
-                });
-            } else {
-                // Prepare table
-                obj.prepareTable();
-            }
+            // Prepare table
+            obj.prepareTable();
         }
 
         // Context menu
@@ -8524,4 +8385,6 @@ const jSuites = require('jsuites');
     // 2021/8/19 Removed JQuery support since it's not used anymore
     // 2021/8/19 Removed Formula extension since it's not used in this app
     return jexcel;
-})));
+}();
+
+export default jspreadsheet;

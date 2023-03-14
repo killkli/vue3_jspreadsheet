@@ -4,7 +4,8 @@
 <script>
 import { ref, onMounted, watch } from "vue";
 import jspreadsheet from "./local/jspreadsheet";
-import "./local/jexcel.css";
+import "./local/jspreadsheet.css";
+import "./local/jsuites/jsuites.css"
 
 export default {
   name: "VueJSpreadsheet",

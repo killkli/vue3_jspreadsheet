@@ -1,6 +1,6 @@
 {
   "name": "vue3_jspreadsheet",
-  "version": "0.4.5",
+  "version": "0.5.0",
   "private": false,
   "description": "A simple Vue3 wrapper for JSpreadsheet module, which is awesome in itself.",
   "keywords": [
@@ -28,8 +28,7 @@
     "build:unpkg": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format iife"
   },
   "dependencies": {
-    "core-js": "^3.24.0",
-    "jsuites": "^4.9.22"
+    "core-js": "^3.24.0"
   },
   "devDependencies": {
     "@babel/core": "^7.14.6",
@@ -54,7 +53,6 @@
     "vue": "^3.0.5"
   },
   "peerDependencies": {
-    "jsuites": "^4.9.22",
     "vue": "^3.0.5"
   },
   "engines": {

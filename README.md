@@ -1,5 +1,8 @@
 # A simple Vue3 wrapper for [JSpreadsheet](https://github.com/jspreadsheet/ce)
 
+## *** Major update for 0.5.0 ***
+modify jspreadsheet-ce's element and moving jsuites' dep into the bundle itself(&removing unused elements)
+
 ## *** update for 0.4.2 ***
 Updated when modelData changes array size (ex. push or pop array item), in both dimensions, the component doestn't update jspreadsheet instance data, now it will act accordingly. No need to manual refresh the component.
 
