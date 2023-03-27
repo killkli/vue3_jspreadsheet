@@ -33,7 +33,6 @@ export default {
         }, 0),
       ],
       (newValue, oldValue) => {
-        console.log(localLock)
         // localLock 用來檢查資料更新是否來自於jspreadsheet的事件，是的話就不需要進行動作，並解除這次的localLock
         if (localLock) {
           localLock = false;
@@ -104,7 +103,7 @@ export default {
 
     // 需將bind value 透過 onchange 傳遞給Vue component
 
-    options.onevent = function (el, ...args) {
+    options.onevent = function (_event_name, el, ...args) {
       const instance = el.jexcel;
       if (typeof instance !== "object") return;
       let result = undefined;
